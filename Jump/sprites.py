@@ -1075,15 +1075,10 @@ class Tumble(pg.sprite.Sprite):
         self.rect.x = WIDTH
         self.rect.y = HEIGHT - 240
         self.vel = vec(0,0)
-        self.rotation = 0
     
     def update(self):
-        self.rotation += 1
         self.vel.x = 5
         self.rect.x -= self.vel.x
-        if self.rotation == 5:
-            self.image = pg.transform.rotate(self.image, 2)
-            self.rotation = 0
     
     def death_update(self, vel, obstacleVelocity):
         self.vel.x = (-1)*obstacleVelocity - vel
