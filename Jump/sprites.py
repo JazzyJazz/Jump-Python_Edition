@@ -999,26 +999,22 @@ class Donze(pg.sprite.Sprite):
         self.vel = vec(0,0)
         self.direction = "up"
         self.status = random.randint(1,10)
-        if self.status > 7:     self.actualis = 5
-        else:   self.actualis = 1
         
-
     def update(self):
-        if self.status < 4:
+        if self.status < 6:
             None
         else:
             if self.direction == "up":
                 if self.rect.y == HEIGHT-300:
                     self.direction = "down"
                 else:
-                    self.rect.y -= self.actualis
+                    self.rect.y -= 5
             elif self.direction == "down":
                 if self.rect.y == HEIGHT - 150:
                     self.direction = "up"
                 else:
-                    self.rect.y += self.actualis
+                    self.rect.y += 5
 
-        
     def death_update(self, vel, obstacleVelocity):
         self.vel.x = (-self.actualis)*obstacleVelocity - vel
         self.rect.x += self.vel.x
@@ -1073,12 +1069,17 @@ class Tumble(pg.sprite.Sprite):
         self.image = pg.transform.scale(self.image, (120, 120))
         self.rect = self.image.get_rect() 
         self.rect.x = WIDTH
-        self.rect.y = HEIGHT - 240
+        self.rect.y = HEIGHT - random.randint(110,130)
         self.vel = vec(0,0)
+        self.acc = vec(0.1,0)
     
     def update(self):
-        self.vel.x = 5
+        self.vel.x += self.acc.x 
+        self.vel.y += 1 - random.randint(0,2)
         self.rect.x -= self.vel.x
+        self.rect.y -= self.vel.y
+        if self.rect.y > HEIGHT - 100:
+            self.vel.y = -self.vel.y
     
     def death_update(self, vel, obstacleVelocity):
         self.vel.x = (-1)*obstacleVelocity - vel

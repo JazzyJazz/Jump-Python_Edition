@@ -214,7 +214,7 @@ class Main():
             self.boss = Donze()
             self.boss.status = randint(1,10)
             self.nbrDonz = randint(0,4)
-            if self.nbrDonz < 2:
+            if self.nbrDonz < 3:
                 self.bossName = "Tumble"
                 self.all_bossSpawnsTumble = pg.sprite.Group()
                 self.boss = Tumble()
@@ -994,7 +994,7 @@ class Main():
             elif self.bossName == "Tumble":
                 if self.counte == self.spawnNbrBoss:
                     self.all_bossSpawnsTumble.add(Tumble())
-                    self.spawnNbrBoss += randint(250, 750)
+                    self.spawnNbrBoss += randint(50, 100)
 
             self.spawnNbr = self.counte + 19
 
@@ -1064,6 +1064,8 @@ class Main():
         elif self.bossName == "Donzé":
             self.all_bossSpawnsVoiture.draw(self.screenGame)
             self.all_bossSpawnsBrochure.draw(self.screenGame)
+        elif self.bossName == "Tumble":
+            self.all_bossSpawnsTumble.draw(self.screenGame)
 
         self.screenGame.blit(self.image, (0,100))
 
