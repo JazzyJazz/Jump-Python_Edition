@@ -34,11 +34,18 @@ class Main():
         self.screenRect= self.screenGame.get_rect()
         self.playerColor = playerColor
         self.col = (37, 171, 252)
+                
+        self.playerName = "Jasper"
+
+        self.kat_active = False
+        self.shield_active = False
 
         self.score = 0
         self.record = actualRecord
         self.counte = 0
         self.lifes = 2
+        if self.playerName == "Eva":
+            self.lifes = 4
         
         self.mute = muting
 
@@ -52,8 +59,7 @@ class Main():
         self.minusLifeActive = False
         self.MinusLife = pg.sprite.Group()
         self.all_extraLife = pg.sprite.Group()
-        self.killColor = 0
-        self.playerColorKill = [self.playerColor, (0,0,0)]
+
 
         self.spawnNbr = 100
         self.spawnCloud = 80
@@ -95,8 +101,6 @@ class Main():
             self.bossName = random.choice(self.profs_list)
             self.profs_list2.remove(self.bossName)
             self.randomProf = True
-        
-        self.playerName = "Evan"
 
         self.boss_attibutes(self.bossName)
 
@@ -108,7 +112,7 @@ class Main():
         self.plane = Plane()
         self.cloud = Cloud()
         self.Moon = Moon()
-        self.player = Player()
+        self.player = Player(self.playerName)
 
         self.hitP = False
         
@@ -136,7 +140,6 @@ class Main():
             self.all_bossSpawnsChemise = pg.sprite.Group()
             self.all_bossSpawnsBanane = pg.sprite.Group()
             self.chemise = Chemise()
-            self.banane = Banane()
             self.musicBoss = os.path.join(CUR_PATH, "music", "bouchez.mp3")
 
         elif name == "Rochat":
@@ -266,20 +269,43 @@ class Main():
 
         self.counte += 1
 
-        self.score = int(self.counte/5)     #int(pg.time.get_ticks()/100)
+        self.score = int(self.counte/5)   
 
         if self.record < self.score:
-            # self.file = open("record.py", "w")
             self.record = self.score
-            # self.file.write("\nrecord = " + str(self.record))
-        else:
-            pass
 
         self.velAdd -= acceleration
+
+        ######
 
         self.player.update()
         if self.player.rect.y < -200:
             self.playing = False
+
+        if (self.counte-1)%3000 == 0:
+            if self.playerName == "Tim":
+                self.lifes += 1
+                self.kat_active = True
+                self.kat_sup = Kat_Support()
+                self.all_sprites.add(self.kat_sup)
+
+            elif self.playerName == "Jasper":
+                if not self.shield_active:
+                    self.shield = Shield()
+                    self.shield_active = True
+                    self.all_sprites.add(self.shield)
+        
+        if self.kat_active:
+            self.kat_sup.update()
+            if self.kat_sup.rect.y < -100:
+                self.kat_active = False
+                self.all_sprites.remove(self.kat_sup)
+
+        if self.shield_active:
+            self.shield.update(self.player.rect.y)
+        
+                
+        ########
         
         for self.bird in self.all_bird:
             self.bird.update(self.velAdd, self.obstacleVelocity)
@@ -504,6 +530,7 @@ class Main():
             elif self.bossName == "Andenmatten":
                 if self.obstacleVelocity != -10:
                     self.obstacleVelocity = -10
+                    self.velAdd = -self.counte*acceleration
 
         if self.counte > self.spawnBoss + 1000: 
             self.boss.death_update(self.velAdd, self.obstacleVelocity)
@@ -601,7 +628,7 @@ class Main():
             self.player.vel.y = 0
         
         self.hitsPMoon = pg.sprite.spritecollide(self.player, self.moon, False)
-        if self.hitsPMoon and self.moonCooldown == 0:
+        if self.hitsPMoon and self.moonCooldown == 0 and self.playerName != "Mateus":
             self.lifes += 1
             self.moonCooldown = 1000
             self.extraLife = ExtraLife(self.player.rect.x , self.player.rect.y)
@@ -795,21 +822,41 @@ class Main():
         else:
             if self.hitP > 0 and (self.killCooldown == 0):
                 self.killCooldown = 100
-                self.lifes -= self.hitP
+                if self.playerName == "Tim":
+                    self.hitsTim = self.hitP + int(random.randint(1,5)/5)
+                    self.lifes -= self.hitsTim
+                    if self.hitsTim == 2:
+                        self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 1))
+                        self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 2))
+                        self.MinusLife.add(MinusLife(self.player.rect.x -10, self.player.rect.y, 1))
+                        self.MinusLife.add(MinusLife(self.player.rect.x -10, self.player.rect.y, 2))
+                        self.minusLifeActive = True
+
+
+
+                elif self.playerName == "Mateus":
+                    self.hitsMateus = self.hitP - int(random.randint(1,4)/4)
+                    self.lifes -= self.hitsMateus
+                    if self.hitsMateus != 0:
+                        self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 1))
+                        self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 2))
+                        self.minusLifeActive = True
+                else:
+                    if not self.shield_active:
+                        self.lifes -= self.hitP
+                        self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 1))
+                        self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 2))
+                        self.minusLifeActive = True
+                    else:
+                        self.shield_active = False
+                        self.all_sprites.remove(self.shield)
+
                 self.hitP = 0
-                self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 1))
-                self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 2))
-                self.minusLifeActive = True
+                
             else:
                 self.hitP = 0
                 if self.killCooldown > 0:
                     self.killCooldown -= 1
-
-        if self.killCooldown > 0:
-            if self.killColor%9 == 0:
-                self.player.image.fill((0, 0, 0,))
-                self.player.image.fill(self.playerColorKill[self.killColor%2])
-            self.killColor += 1
 
 
 
@@ -919,7 +966,7 @@ class Main():
                         self.bossRotated = 20
                         self.spawnNbrBoss += randint(50, 100)
                     else:
-                        self.all_bossSpawnsBanane.add(Banane())
+                        self.all_bossSpawnsBanane.add(Banane(self.playerName))
                         self.boss.image = pg.image.load(self.path)
                         self.boss.image = pg.transform.scale(self.boss.image, (150, 150))
                         self.bossRotated = 20
@@ -968,10 +1015,10 @@ class Main():
                     if self.nbr > 70:
                         self.trebuchet.update(1)
                         self.all_bossSpawnsTM.add(TM())
-                        self.spawnNbrBoss += randint(25, 60)
+                        self.spawnNbrBoss += randint(25, 60)*(1+3*(self.playerName=="Matteo"))
                         self.positionTre = 19
                     else:
-                        self.spawnNbrBoss += 15
+                        self.spawnNbrBoss += 15*(1+3*(self.playerName=="Matteo"))
             
                 if self.positionTre == 0:
                     self.trebuchet.update(0)

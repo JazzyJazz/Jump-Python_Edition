@@ -10,13 +10,14 @@ import os
 
 
 class Player(pg.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, playerName):
         super().__init__()
         self.image = pg.Surface((40, 50))
         self.rect = self.image.get_rect()
         self.pos = vec(WIDTH / 2, self.rect.height / 2)
         self.acc = vec(0,0.3)
         self.vel = vec(0, 0)
+        self.path = os.path.join(CUR_PATH, "players", f"{playerName}")
         self.pathS = os.path.join(CUR_PATH, "sound", "soundJump.wav")
         self.soundJump = pg.mixer.Sound(self.pathS)
 
@@ -185,11 +186,14 @@ class Chemise(pg.sprite.Sprite):
         self.rect.x += self.vel.x
     
 class Banane(pg.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, playerName):
         super().__init__()
         self.path = os.path.join(CUR_PATH, "boss", "Bouchez", "banane.png")
         self.image = pg.image.load(self.path)
-        self.image = pg.transform.scale(self.image, (75, 75))
+        if playerName == "Malorie":
+            self.image = pg.transform.scale(self.image, (150, 150))
+        else:
+            self.image = pg.transform.scale(self.image, (75, 75))
         self.rect = self.image.get_rect() 
         self.rect.x = WIDTH
         self.rect.y = HEIGHT - 120

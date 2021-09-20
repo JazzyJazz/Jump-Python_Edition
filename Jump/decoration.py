@@ -139,3 +139,29 @@ class Text(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = int(WIDTH/2)
         self.rect.y = int(HEIGHT/2)
+
+class Kat_Support(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.path = os.path.join(CUR_PATH, "attributes", "kat_support.png")
+        self.image = pg.image.load(self.path)
+        self.image = pg.transform.scale(self.image, (200, 130))
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH/2
+        self.rect.y = randint(200, 400)
+
+    def update(self):
+        self.rect.y -= 3
+
+class Shield(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.path = os.path.join(CUR_PATH, "attributes", "shield.png")
+        self.image = pg.image.load(self.path)
+        self.image = pg.transform.scale(self.image, (60, 60))
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH/2 + 20
+        self.rect.y = 0
+
+    def update(self, playerY):
+        self.rect.y = playerY
