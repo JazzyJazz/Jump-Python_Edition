@@ -14,15 +14,16 @@ class Main():
     def __init__(self):
         # initialisation pygame et création de la fenetre
         self.obstacleVelocity = -10
-        self.playerColor = (0,0,0)
         self.running = True
         try:    self.image = pg.Surface((int(WIDTH/8), 220))
         except:     self.image = pg.Surface((300, 220))
         self.image.fill(jaune3)
         self.profs_list = ["Bouchez", "Besson", "Rochat", "Vuille", "Buchmann", "Faggioni", "Andenmatten", "Reymond", "Gratzl", "Sahraoui", "Moix", "Iglesias", "Donzé", "Gur"]
+        self.player_list = ["Adrien B", "Tim", "Mateus", "Loïc", "Jasper", "Malorie", "Alexandre", "Karim", "Oscar", "Piotr", "Adrien M", "Diego", "Simon", "Eva", "Frederike", "Matteo", "Shijie", "Evan"]
+        self.playerName = random.choice(self.player_list)
         self.mute = muting
     
-    def new(self, actualRecord, playerColor):
+    def new(self, actualRecord, playerName):
 
         pg.init()
         pg.display.set_caption(TITLE) # génerer la fenêtre du jeu
@@ -32,10 +33,11 @@ class Main():
         self.clock = pg.time.Clock()
         self.screenGame = pg.display.set_mode((0, 0), pg.FULLSCREEN) # definir la taille de l'ecran
         self.screenRect= self.screenGame.get_rect()
-        self.playerColor = playerColor
         self.col = (37, 171, 252)
                 
-        self.playerName = "Jasper"
+        self.playerName = playerName
+        if self.playerName == "Shijie":
+            self.playerName = random.choice(self.player_list)
 
         self.kat_active = False
         self.shield_active = False
@@ -278,7 +280,7 @@ class Main():
 
         ######
 
-        self.player.update()
+        self.player.update(self.playerName)
         if self.player.rect.y < -200:
             self.playing = False
 
@@ -765,6 +767,7 @@ class Main():
                     self.hitP = 0
                     self.killCooldown = 10
             if self.hitsPBossE:
+                self.hitP = 1
                 if self.playerName == "Adrien M":
                     self.hitP = 3
         
@@ -844,8 +847,9 @@ class Main():
                 else:
                     if not self.shield_active:
                         self.lifes -= self.hitP
-                        self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 1))
-                        self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 2))
+                        for x in range(self.hitP):
+                            self.MinusLife.add(MinusLife(self.player.rect.x -10*x, self.player.rect.y, 1))
+                            self.MinusLife.add(MinusLife(self.player.rect.x -10*x, self.player.rect.y, 2))
                         self.minusLifeActive = True
                     else:
                         self.shield_active = False
@@ -878,7 +882,11 @@ class Main():
                     self.player.pos = vec(WIDTH / 2, HEIGHT-50)
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_LCTRL or event.key == pg.K_DOWN:
-                    self.player.image = pg.transform.scale(self.player.image, (40,50))
+                    self.player.image = pg.transform.scale(self.player.image, (60,75))
+                    try: 
+                        self.player.image = pg.image.load(os.path.join(CUR_PATH, "players", f"{self.playerName}.png"))
+                        self.player.image = pg.transform.scale(self.player.image, (60,75))
+                    except: None
                     self.player.rect = self.player.image.get_rect()
                     self.player.pos = vec(WIDTH / 2, HEIGHT-50)
     
@@ -927,7 +935,6 @@ class Main():
 
             
         
-        self.player.image.fill(self.playerColor)
 
 
         # afficher les sprites
@@ -1288,17 +1295,10 @@ class Main():
                 self.obstacleVelocity = -10
                 self.bossRush = True
  
-            self.getPlayerColorChoice = self.playerColorList.get(ANCHOR)
-            if self.getPlayerColorChoice == "Noir":
-                self.playerColor = (0,0,0)
-            elif self.getPlayerColorChoice == "Rose":
-                self.playerColor = (243, 37, 252)
-            elif self.getPlayerColorChoice == "Bleu": 
-                self.playerColor = (40, 170, 250)
-            elif self.getPlayerColorChoice == "Blanc":
-                self.playerColor = (230, 230, 230)
-            elif self.getPlayerColorChoice == "Orange":
-                self.playerColor = (255, 150, 0)
+            self.playerName = self.playerNameList.get(ANCHOR)
+            if self.playerName == "":
+                self.playerName = random.choice(self.player_list)
+            
             
             self.bossName = self.bossList.get(ANCHOR)
             if self.bossName == "":
@@ -1306,7 +1306,7 @@ class Main():
 
             self.startScreen.destroy()
 
-            return(self.obstacleVelocity, self.playerColor, self.bossName, self.bossRush)
+            return(self.obstacleVelocity, self.playerName, self.bossName, self.bossRush)
 
 
         self.titleFrame = Frame(self.startScreen, bg=jaune1HEX)
@@ -1343,7 +1343,7 @@ class Main():
         self.difficultyListFrame.pack(side=LEFT)
         self.difficultyListTitle = Label(self.difficultyListFrame, text = "Difficulté", bg=jaune1HEX)
         self.difficultyListTitle.pack(side= TOP)
-        self.difficultyList = Listbox(self.difficultyListFrame, height= 3, bg=jaune2HEX, exportselection=0)
+        self.difficultyList = Listbox(self.difficultyListFrame, height= 6, bg=jaune2HEX, exportselection=0)
         self.difficultyList.pack()
         self.difficultyList.insert(END, "Facile")
         self.difficultyList.insert(END, "Moyen")
@@ -1351,23 +1351,36 @@ class Main():
         self.difficultyList.insert(END, "Hardcore")
         self.difficultyList.insert(END, "Boss Rush")
 
-        self.playerColorListFrame = Frame(self.listFrame, padx = 1, bg=jaune1HEX)
-        self.playerColorListFrame.pack(side=LEFT)
-        self.playerColorListTitle = Label(self.playerColorListFrame, text = "Couleur du joueur", bg=jaune1HEX)
-        self.playerColorListTitle.pack(side = TOP)
-        self.playerColorList = Listbox(self.playerColorListFrame, height= 3, bg=jaune2HEX, exportselection=0)
-        self.playerColorList.pack()
-        self.playerColorList.insert(END, "Noir")
-        self.playerColorList.insert(END, "Orange")
-        self.playerColorList.insert(END, "Rose")
-        self.playerColorList.insert(END, "Bleu")
-        self.playerColorList.insert(END, "Blanc")
+        self.playerNameListFrame = Frame(self.listFrame, padx = 1, bg=jaune1HEX)
+        self.playerNameListFrame.pack(side=LEFT)
+        self.playerNameListTitle = Label(self.playerNameListFrame, text = "Nom du joueur", bg=jaune1HEX)
+        self.playerNameListTitle.pack(side = TOP)
+        self.playerNameList = Listbox(self.playerNameListFrame, height= 6, bg=jaune2HEX, exportselection=0)
+        self.playerNameList.pack()
+        self.playerNameList.insert(END, "Adrien B")
+        self.playerNameList.insert(END, "Tim")
+        self.playerNameList.insert(END, "Mateus")
+        self.playerNameList.insert(END, "Loïc")
+        self.playerNameList.insert(END, "Jasper")
+        self.playerNameList.insert(END, "Malorie")
+        self.playerNameList.insert(END, "Alexandre")
+        self.playerNameList.insert(END, "Karim")
+        self.playerNameList.insert(END, "Oscar")
+        self.playerNameList.insert(END, "Piotr")
+        self.playerNameList.insert(END, "Adrien M")
+        self.playerNameList.insert(END, "Diego")
+        self.playerNameList.insert(END, "Simon")
+        self.playerNameList.insert(END, "Eva")
+        self.playerNameList.insert(END, "Frederike")
+        self.playerNameList.insert(END, "Matteo")
+        self.playerNameList.insert(END, "Shijie")
+        self.playerNameList.insert(END, "Evan")
 
         self.bossFrame = Frame(self.listFrame, padx = 1, bg=jaune1HEX)
         self.bossFrame.pack(side=RIGHT)
         self.bossTitle = Label(self.bossFrame, text = "Présence du boss : ", bg=jaune1HEX)
         self.bossTitle.pack(side= TOP)
-        self.bossList = Listbox(self.bossFrame, height= 5, bg=jaune2HEX, exportselection=0)
+        self.bossList = Listbox(self.bossFrame, height= 6, bg=jaune2HEX, exportselection=0)
         self.bossList.pack()
         self.bossList.insert(END, "Besson")
         self.bossList.insert(END, "Bouchez")
@@ -1396,7 +1409,7 @@ class Main():
         self.startScreen.protocol("WM_DELETE_WINDOW", on_closing)
 
         self.startScreen.mainloop()
-        return(self.obstacleVelocity, self.playerColor, self.bossName, self.bossRush)
+        return(self.obstacleVelocity, self.playerName, self.bossName, self.bossRush)
 
         
 g = Main()
@@ -1408,14 +1421,14 @@ except:
     actualRecord = 0
 
 obstacleVelocity = show_start_screen_value[0]
-playerColor = show_start_screen_value[1]
+playerName = show_start_screen_value[1]
 bossName = show_start_screen_value[2]
 
 while g.running:
-    actualRecord = g.new(actualRecord, playerColor)
+    actualRecord = g.new(actualRecord, playerName)
     show_start_screen_value = g.show_start_screen("Restart", actualRecord) 
     obstacleVelocity = show_start_screen_value[0]
-    playerColor = show_start_screen_value[1]
+    playerName = show_start_screen_value[1]
     bossName = show_start_screen_value[2]
     bossRush = show_start_screen_value[3]
     if obstacleVelocity > -5:
@@ -1426,7 +1439,7 @@ while g.running:
     else:
         g = Main()
         g.obstacleVelocity = obstacleVelocity
-        g.playerColor = playerColor
+        g.playerName = playerName
         g.bossName = bossName
         g.record = actualRecord
         g.bossRush = bossRush

@@ -7,28 +7,44 @@ vec = pg.Vector2
 import random
 from screenSize import *
 import os
+import time
 
 
 class Player(pg.sprite.Sprite):
     def __init__(self, playerName):
         super().__init__()
-        self.image = pg.Surface((40, 50))
-        self.rect = self.image.get_rect()
-        self.pos = vec(WIDTH / 2, self.rect.height / 2)
         self.acc = vec(0,0.3)
         self.vel = vec(0, 0)
-        self.path = os.path.join(CUR_PATH, "players", f"{playerName}")
+        self.path = os.path.join(CUR_PATH, "players", f"{playerName}.png")
+        try:        self.image = pg.image.load(self.path)
+        except:     self.image = pg.Surface((40, 50))
+        self.image = pg.transform.scale(self.image, (60,75))
+        self.rect = self.image.get_rect()
+        self.pos = vec(WIDTH / 2, self.rect.height / 2)
         self.pathS = os.path.join(CUR_PATH, "sound", "soundJump.wav")
         self.soundJump = pg.mixer.Sound(self.pathS)
+        self.time_delay = 0
+        self.jumpTime = False
 
-    def update(self):
+    def update(self, playerName):
         self.acc = vec(0, 0.3)
         self.rect.midbottom = self.pos
         self.keys = pg.key.get_pressed()
         if (self.keys[pg.K_SPACE] or self.keys[pg.K_UP]) and self.pos.y >= (HEIGHT - 50):
-            self.acc.y = -9
+            if playerName == "Frederike":
+                self.jumpTime = True
+            else:
+                self.acc.y = -9
             if not muting:
                 self.soundJump.play()
+        if self.jumpTime:
+            self.time_delay += 1
+            if self.time_delay == 10:
+                self.acc.y = -9
+                self.jumpTime = False
+                self.time_delay = 0
+                if not muting:
+                    self.soundJump.play()
         self.vel.y += self.acc.y
         self.rect.y += self.vel.y
         self.pos += 0.5 * self.acc + self.vel
