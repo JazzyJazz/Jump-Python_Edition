@@ -449,7 +449,7 @@ class PressText(pg.sprite.Sprite):
 
     def update(self):
         self.keys = pg.key.get_pressed()
-        if self.keys[self.nbr + 97]:#pg.self.keyToPress]:
+        if self.keys[self.nbr + 97]:
             if self.counteKey < 100:
                 self.counteKey += 1
             self.text = f"""Ecrivez une dissertation de 80 lignes sur la touche {self.keyToPress} ;
@@ -764,6 +764,20 @@ class Brochetta(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
+class Chromosomes(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.path = os.path.join(CUR_PATH, "boss", "Sahraoui", "immigration_book.png")
+        self.image = pg.image.load(self.path)
+        self.image = pg.transform.scale(self.image, (70, 100))
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH
+        self.rect.y = random.randint(100,150)
+        self.vel = vec(0,0)
+    
+    def update(self, vel, obstacleVelocity):
+        self.vel.x = obstacleVelocity + vel
+        self.rect.x += self.vel.x
 
 
 
@@ -1001,7 +1015,7 @@ class Donze(pg.sprite.Sprite):
         self.status = random.randint(1,10)
         
     def update(self):
-        if self.status < 6:
+        if self.status < 4:
             None
         else:
             if self.direction == "up":
@@ -1016,7 +1030,7 @@ class Donze(pg.sprite.Sprite):
                     self.rect.y += 5
 
     def death_update(self, vel, obstacleVelocity):
-        self.vel.x = (-self.actualis)*obstacleVelocity - vel
+        self.vel.x = (-5)*obstacleVelocity - vel
         self.rect.x += self.vel.x
 
 class Voiture(pg.sprite.Sprite):
@@ -1088,3 +1102,47 @@ class Tumble(pg.sprite.Sprite):
 
 
 # BURRI
+
+
+# SPORT
+class Gur(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.path = os.path.join(CUR_PATH, "boss", "Gur", "gur.png")
+        self.image = pg.image.load(self.path)
+        self.image = pg.transform.scale(self.image, (120,120))
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH
+        self.rect.y = HEIGHT-150
+        self.vel = vec(0,0)
+
+    def update(self):
+        None
+        
+    def death_update(self, vel, obstacleVelocity):
+        self.vel.x = (-1)*obstacleVelocity - vel
+        self.rect.x += self.vel.x
+
+class Ballon(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.path1 = os.path.join(CUR_PATH, "boss", "Gur", "ballon1.png")
+        self.path2 = os.path.join(CUR_PATH, "boss", "Gur", "ballon2.png")
+        self.imageNbr = random.randint(0, 1)
+        self.imageList = [self.path1, self.path2]
+        self.image = pg.image.load(self.imageList[self.imageNbr])
+        self.image = pg.transform.scale(self.image, (120, 120))
+        self.rect = self.image.get_rect() 
+        self.rect.x = WIDTH
+        self.rect.y = HEIGHT - random.randint(120,150)
+        self.vel = vec(0,0)
+        self.acc = vec(0.1,0)
+    
+    def update(self, vel, obstacleVelocity):
+        self.vel.x = obstacleVelocity + vel
+        self.vel.y -= 1-self.imageNbr
+        self.rect.x += self.vel.x
+        self.rect.y -= self.vel.y
+        if self.rect.y > HEIGHT - 100:
+            self.vel.y = -1.5*self.vel.y
+

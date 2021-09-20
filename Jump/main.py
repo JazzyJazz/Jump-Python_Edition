@@ -19,7 +19,7 @@ class Main():
         try:    self.image = pg.Surface((int(WIDTH/8), 220))
         except:     self.image = pg.Surface((300, 220))
         self.image.fill(jaune3)
-        self.profs_list = ["Bouchez", "Besson", "Rochat", "Vuille", "Buchmann", "Faggioni", "Andenmatten", "Reymond", "Gratzl", "Sahraoui", "Moix", "Iglesias", "Donzé"]
+        self.profs_list = ["Bouchez", "Besson", "Rochat", "Vuille", "Buchmann", "Faggioni", "Andenmatten", "Reymond", "Gratzl", "Sahraoui", "Moix", "Iglesias", "Donzé", "Gur"]
         self.mute = muting
     
     def new(self, actualRecord, playerColor):
@@ -95,6 +95,8 @@ class Main():
             self.bossName = random.choice(self.profs_list)
             self.profs_list2.remove(self.bossName)
             self.randomProf = True
+        
+        self.playerName = "Evan"
 
         self.boss_attibutes(self.bossName)
 
@@ -128,6 +130,7 @@ class Main():
             self.all_bossSpawnsMissile = pg.sprite.Group()
             self.missile = Missile(self.boss.rect.y)
             self.musicBoss = os.path.join(CUR_PATH, "music", "besson.mp3")
+
         elif name == "Bouchez":
             self.boss = Bouchez()
             self.all_bossSpawnsChemise = pg.sprite.Group()
@@ -135,6 +138,7 @@ class Main():
             self.chemise = Chemise()
             self.banane = Banane()
             self.musicBoss = os.path.join(CUR_PATH, "music", "bouchez.mp3")
+
         elif name == "Rochat":
             self.boss = Rochat()
             self.all_bossSpawnsKinder = pg.sprite.Group()
@@ -143,12 +147,14 @@ class Main():
             self.coca = Coca()
             self.hitsCoca = 0
             self.musicBoss = os.path.join(CUR_PATH, "music", "rochat.mp3")
+
         elif name == "Vuille":
             self.boss = Vuille()
             self.all_bossSpawnsTM = pg.sprite.Group()
             self.tm = TM()
             self.trebuchet = Trebuchet()
             self.musicBoss = os.path.join(CUR_PATH, "music", "vuille.mp3")
+
         elif name == "Buchmann":
             self.boss = Buchman()
             self.all_bossSpawnsEmerentia = pg.sprite.Group()
@@ -156,11 +162,13 @@ class Main():
             self.emerentia = Emerentia()
             self.keyToPress = PressText()
             self.musicBoss = os.path.join(CUR_PATH, "music", "buchman.mp3")
+
         elif name == "Faggioni":
             self.boss = Faggioni()
             self.all_bossSpawnsNotesMus = pg.sprite.Group()
             self.notesMus = NotesMus(self.boss.rect.y)
             self.musicBoss = os.path.join(CUR_PATH, "music", "faggioni.mp3")
+
         elif name == "Andenmatten":
             self.boss = Andenmatten()
             self.all_bossSpawnsChaussures = pg.sprite.Group()
@@ -169,6 +177,7 @@ class Main():
             self.vent = Vent(self.counte)
             self.ventBack = True
             self.musicBoss = os.path.join(CUR_PATH, "music", "andenmatten.mp3")
+
         elif name == "Reymond":
             self.boss = Reymond()
             self.all_bossSpawnsChimie1 = pg.sprite.Group()
@@ -179,8 +188,13 @@ class Main():
             self.explosion = Explosion(self.chimie1.rect.x, self.chimie1.rect.y)
             self.killChimie = random.choice([self.all_bossSpawnsChimie2, self.all_bossSpawnsChimie1])
             self.musicBoss = os.path.join(CUR_PATH, "music", "reymond.mp3")
+
         elif name == "Gratzl":
             self.boss = Gratzl()
+            if self.playerName == "Piotr":
+                self.image = pg.image.load(os.path.join(CUR_PATH, "boss", "Gratzl", "gratzline.png"))
+                self.image = pg.transform.scale(self.image, (120,120))
+
             self.nbr = randint(0, 2)
             if self.nbr == 2:
                 self.quintasActive = False
@@ -192,16 +206,19 @@ class Main():
             self.schorle = Schorle(self.quintasActive)
             self.all_bossSpawnsSchorle = pg.sprite.Group()
             self.musicBoss = os.path.join(CUR_PATH, "music", "gratzl.mp3")
+
         elif name == "Sahraoui":
             self.boss = Sahraoui()
             self.all_bossSpawnsImmigrationBook = pg.sprite.Group()
             self.all_bossSpawnsEnglishFile = pg.sprite.Group()
             self.musicBoss = os.path.join(CUR_PATH, "music", "sahraoui.mp3")
+
         elif name == "Moix":
             self.boss = Moix()
             self.all_bossSpawnsInstument = pg.sprite.Group()
             self.all_bossSpawnsBaguette = pg.sprite.Group()
             self.musicBoss = os.path.join(CUR_PATH, "music", "moix.mp3")
+
         elif name == "Iglesias":
             self.boss = Iglesias()
             self.cable1 = Cable1()
@@ -210,6 +227,7 @@ class Main():
             self.all_bossSpawnsOrdi = pg.sprite.Group()
             self.musicBoss = os.path.join(CUR_PATH, "music", "iglesias.mp3")
             self.nbrCab = 0
+
         elif name == "Donzé":
             self.boss = Donze()
             self.boss.status = randint(1,10)
@@ -224,6 +242,11 @@ class Main():
                 self.brochure = Brochure()
                 self.voiture = Voiture()
             self.musicBoss = os.path.join(CUR_PATH, "music", "moix.mp3")
+
+        elif name == "Gur":
+            self.boss = Gur()
+            self.all_bossSpawnsBallon = pg.sprite.Group()
+            self.musicBoss = os.path.join(CUR_PATH, "music", "besson.mp3")
 
 
 
@@ -348,7 +371,17 @@ class Main():
                     self.all_bossSpawnsEmerentia.remove(self.emerentia)
             for self.keyToPress in self.all_bossSpawnsKeyToPress:
                 self.keyToPress.update()
+
                 if self.counte == self.spawnNbrBoss + 200:
+                    if self.playerName == "Simon":
+                        if not self.keyToPress.death:
+                            self.lifes += 1
+                    else:
+                        if self.keyToPress.death:
+                                self.playing = False
+                        self.all_bossSpawnsKeyToPress.remove(self.keyToPress)
+                        self.spawnNbrBoss += randint(201, 250)
+                if self.counte == self.spawnNbrBoss + 180 and self.playerName == "Piotr":
                     if self.keyToPress.death:
                         self.playing = False
                     self.all_bossSpawnsKeyToPress.remove(self.keyToPress)
@@ -455,6 +488,12 @@ class Main():
                 self.tumble.update()
                 if self.tumble.rect.x < -100:
                     self.all_bossSpawnsTumble.remove(self.tumble)
+        
+        elif self.bossName == "Gur":
+            for self.ballon in self.all_bossSpawnsBallon:
+                self.ballon.update(self.velAdd, self.obstacleVelocity)
+                if self.ballon.rect.x < -100:
+                    self.all_bossSpawnsBallon.remove(self.ballon)
             
 
         if self.counte == self.spawnBoss + 1000:
@@ -478,6 +517,10 @@ class Main():
                 self.extraLife = ExtraLife(WIDTH-100, HEIGHT-150)
                 self.all_extraLife.add(self.extraLife)
                 self.extraLifeActive = True
+                if self.playerName == "Malorie":
+                    if self.bossName == "Gur":
+                        self.lifes += 1
+                
                 if self.bossName == "Gratzl":
                     if self.quintasActive:
                         self.all_sprites.remove(self.boss2)
@@ -504,7 +547,7 @@ class Main():
                             self.all_sprites.add(self.text)
                             self.textCooldown = True
                             self.spawnBoss = self.counte + 300
-                            self.profs_list2 = ["Bouchez", "Besson", "Rochat", "Vuille", "Buchmann", "Faggioni", "Andenmatten", "Reymond", "Gratzl", "Sahraoui", "Moix", "Iglesias", "Donzé"]
+                            self.profs_list2 = ["Bouchez", "Besson", "Rochat", "Vuille", "Buchmann", "Faggioni", "Andenmatten", "Reymond", "Gratzl", "Sahraoui", "Moix", "Iglesias", "Donzé", "Gur"]
                             
                             
                     else:
@@ -565,35 +608,48 @@ class Main():
             self.all_extraLife.add(self.extraLife)
             self.extraLifeActive = True
         
+        ############
+
         self.hitsPB = pg.sprite.spritecollide(self.player, self.all_bird, False)
         self.hitsPH = pg.sprite.spritecollide(self.player, self.all_holes, False)
         self.hitsPO = pg.sprite.spritecollide(self.player, self.all_obstacles, False)
         self.hitsPP = pg.sprite.spritecollide(self.player, self.all_planes, False)
 
+        if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP: 
+            self.hitP = 1
 
         if self.bossName == "Bouchez":
             self.hitsPBossB = pg.sprite.spritecollide(self.player, self.all_bossSpawnsBanane, False)
             self.hitsPBossC = pg.sprite.spritecollide(self.player, self.all_bossSpawnsChemise, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossB or self.hitsPBossC:
-                self.hitP = True
+            if self.hitsPBossB or self.hitsPBossC:
+                self.hitP = 1
+                if self.playerName == "Matteo":
+                    self.hitP = 3
 
         elif self.bossName == "Besson":
             self.hitsPBossM = pg.sprite.spritecollide(self.player, self.all_bossSpawnsMissile, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossM:
-                self.hitP = True
+            if self.hitsPBossM:
+                self.hitP = 1
+                if self.playerName == "Adrien M":
+                    self.hitP -= random.randint(0,1)
+                    if self.hitP == 0:
+                        self.killCooldown = 10
  
         elif self.bossName == "Rochat":
             self.hitsPBossK = pg.sprite.spritecollide(self.player, self.all_bossSpawnsKinder, False)
             self.hitsPBossC = pg.sprite.spritecollide(self.player, self.all_bossSpawnsCoca, False)
             self.hitsBossK = pg.sprite.spritecollide(self.boss, self.all_bossSpawnsKinder, False)
             self.hitsBossC = pg.sprite.spritecollide(self.boss, self.all_bossSpawnsCoca, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossK:
-                self.hitP = True
+            if self.hitsPBossK:
+                self.hitP = 1
+                if self.playerName == "Diego":
+                    self.hitP = 3
 
             if self.hitsPBossC:
-                self.hitsCoca += 1
-                self.obstacleVelocity -= 2
-                self.all_bossSpawnsCoca.remove(self.coca)
+                if self.playerName != "Karim":
+                    self.hitsCoca += 4
+                    self.obstacleVelocity -= 6
+                    self.all_bossSpawnsCoca.remove(self.coca)
             if self.hitsBossK:
                 self.kinder.eaten()
                 self.bossRotated = 20
@@ -605,29 +661,39 @@ class Main():
 
         elif self.bossName == "Vuille":
             self.hitsPBossTM = pg.sprite.spritecollide(self.player, self.all_bossSpawnsTM, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossTM:
-                self.hitP = True
+            if self.hitsPBossTM:
+                self.hitP = 1
+                if self.playerName == "Simon":
+                    self.hitP = 100
+                elif self.playerName == "Eva":
+                    self.hitP = 2
 
         elif self.bossName == "Buchmann":
             self.hitsPBossE = pg.sprite.spritecollide(self.player, self.all_bossSpawnsEmerentia, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossE:
-                self.hitP = True
+            if self.hitsPBossE:
+                self.hitP = 1
 
         elif self.bossName == "Faggioni":
             self.hitsPBossN = pg.sprite.spritecollide(self.player, self.all_bossSpawnsNotesMus, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossN:
-                self.hitP = True
+            if self.hitsPBossN:
+                self.hitP = 1
+                if self.playerName == "Loïc":
+                    self.hitP = 2*random.randint(0,1)
+                    if self.hitP == 0:
+                        self.killCooldown = 10
 
         elif self.bossName == "Andenmatten":
             self.hitsPBossC = pg.sprite.spritecollide(self.player, self.all_bossSpawnsChaussures, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossC:
-                self.hitP = True
+            if self.hitsPBossC:
+                self.hitP = 1
         
         elif self.bossName == "Reymond":
             self.hitsPBossC = pg.sprite.spritecollide(self.player, self.killChimie, False)
             self.hitsPBossE = pg.sprite.spritecollide(self.player, self.all_bossSpawnsExplosion, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossC or self.hitsPBossE:
-                self.hitP = True
+            if self.hitsPBossC or self.hitsPBossE:
+                self.hitP = 1
+                if self.playerName == "Evan":
+                    self.hitP = 2
 
             for self.chimie1 in self.all_bossSpawnsChimie1:
                 self.hitsC1C2 = pg.sprite.spritecollide(self.chimie1, self.all_bossSpawnsChimie2, False)
@@ -656,52 +722,86 @@ class Main():
             if self.quintasActive:
                 self.hitsPBossP = pg.sprite.spritecollide(self.player, self.all_bossSpawnsPlaques, False)
                 if self.hitsPBossP:
-                    self.hitP = True
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossS:
-                self.hitP = True
+                    self.hitP = 1
+            if self.hitsPBossS:
+                self.hitP = 1
+                if self.playerName == "Piotr":
+                    self.hitP = 0
+                    self.killCooldown = 10
         
         elif self.bossName == "Sahraoui":
             self.hitsPBossI = pg.sprite.spritecollide(self.player, self.all_bossSpawnsImmigrationBook, False)
             self.hitsPBossE = pg.sprite.spritecollide(self.player, self.all_bossSpawnsEnglishFile, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossI or self.hitsPBossE:
-                self.hitP = True
+            if self.hitsPBossI:
+                self.hitP = 1
+                if self.playerName == "Oscar":
+                    self.hitP = 0
+                    self.killCooldown = 10
+            if self.hitsPBossE:
+                if self.playerName == "Adrien M":
+                    self.hitP = 3
         
         elif self.bossName == "Moix":
             self.hitsPBossB = pg.sprite.spritecollide(self.player, self.all_bossSpawnsBaguette, False)
             self.hitsPBossI = pg.sprite.spritecollide(self.player, self.all_bossSpawnsInstument, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossB or self.hitsPBossI:
-                self.hitP = True
+            if self.hitsPBossB:
+                self.hitP = 1
+                if self.playerName == "Karim":
+                    self.hitP = 2
+            if self.hitsPBossI:
+                self.hitP = 1 
+                if self.playerName == "Diego":
+                    self.hitP = 0
+                    self.killCooldown = 10
 
         elif self.bossName == "Iglesias":
             self.hitsPBossC = pg.sprite.spritecollide(self.player, self.all_bossSpawnsCable, False)
             self.hitsPBossO = pg.sprite.spritecollide(self.player, self.all_bossSpawnsOrdi, False)
-            if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossC or self.hitsPBossO:
-                self.hitP = True
+            if self.hitsPBossC:
+                self.hitP = 1
+                if self.playerName == "Oscar":
+                    self.hitP = 2
+            if self.hitsPBossO:
+                self.hitP = 1
+                if self.playerName == "Adrien B":
+                    self.hitP = 0
+                    self.killCooldown = 10
+                if self.playerName == "Oscar":
+                    self.hitP = 2
 
         elif self.bossName == "Donzé":
             self.hitsPBossV = pg.sprite.spritecollide(self.player, self.all_bossSpawnsVoiture, False)
             self.hitsPBossB = pg.sprite.spritecollide(self.player, self.all_bossSpawnsBrochure, False)
             if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP or self.hitsPBossV or self.hitsPBossB:
-                self.hitP = True
+                self.hitP = 1
         
         elif self.bossName == "Tumble":
             if self.hitsPB or self.hitsPH or self.hitsPO or self.hitsPP:
-                self.hitP = True
+                self.hitP = 1
+        
+        elif self.bossName == "Gur":
+            self.hitsPBossB = pg.sprite.spritecollide(self.player, self.all_bossSpawnsBallon, False)
+            if self.hitsPBossB:
+                self.hitP = 1
+                if self.playerName == "Evan":
+                    self.hitP -= random.randint(0,1)
+                    if self.hitP == 0:
+                        self.killCooldown = 10
 
         if self.lifes < 1:
             self.file = open("record.py", "w")
             self.file.write("\nrecord = " + str(self.record))
             self.playing = False
         else:
-            if self.hitP and (self.killCooldown == 0):
+            if self.hitP > 0 and (self.killCooldown == 0):
                 self.killCooldown = 100
-                self.hitP = False
-                self.lifes -= 1
+                self.lifes -= self.hitP
+                self.hitP = 0
                 self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 1))
                 self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 2))
                 self.minusLifeActive = True
             else:
-                self.hitP = False
+                self.hitP = 0
                 if self.killCooldown > 0:
                     self.killCooldown -= 1
 
@@ -995,6 +1095,12 @@ class Main():
                 if self.counte == self.spawnNbrBoss:
                     self.all_bossSpawnsTumble.add(Tumble())
                     self.spawnNbrBoss += randint(50, 100)
+            
+            elif self.bossName == "Gur":
+                if self.counte == self.spawnNbrBoss:
+                    self.all_bossSpawnsBallon.add(Ballon())
+                    self.spawnNbrBoss += randint(50, 80)
+
 
             self.spawnNbr = self.counte + 19
 
@@ -1066,6 +1172,8 @@ class Main():
             self.all_bossSpawnsBrochure.draw(self.screenGame)
         elif self.bossName == "Tumble":
             self.all_bossSpawnsTumble.draw(self.screenGame)
+        elif self.bossName == "Gur":
+            self.all_bossSpawnsBallon.draw(self.screenGame)
 
         self.screenGame.blit(self.image, (0,100))
 
@@ -1227,6 +1335,7 @@ class Main():
         self.bossList.insert(END, "Moix")
         self.bossList.insert(END, "Iglesias")
         self.bossList.insert(END, "Donzé")
+        self.bossList.insert(END, "Gur")
         self.bossList.insert(END, "Profs")
 
 
