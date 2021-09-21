@@ -18,7 +18,7 @@ class Player(pg.sprite.Sprite):
         self.path = os.path.join(CUR_PATH, "players", f"{playerName}.png")
         try:        self.image = pg.image.load(self.path)
         except:     self.image = pg.Surface((40, 50))
-        self.image = pg.transform.scale(self.image, (60,75))
+        self.image = pg.transform.scale(self.image, (80,100))
         self.rect = self.image.get_rect()
         self.pos = vec(WIDTH / 2, self.rect.height / 2)
         self.pathS = os.path.join(CUR_PATH, "sound", "soundJump.wav")
@@ -684,9 +684,12 @@ class Explosion(pg.sprite.Sprite):
 
 # GRATZL
 class Gratzl(pg.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, playerName):
         super().__init__()
-        self.path = os.path.join(CUR_PATH, "boss", "Gratzl", "gratzl.png")
+        if playerName == "Piotr":
+            self.path = os.path.join(CUR_PATH, "boss", "Gratzl", "gratzline.png")
+        else:
+            self.path = os.path.join(CUR_PATH, "boss", "Gratzl", "gratzl.png")
         self.image = pg.image.load(self.path)
         self.image = pg.transform.scale(self.image, (120,120))
         self.rect = self.image.get_rect()
@@ -783,22 +786,64 @@ class PlaqueFemmes(pg.sprite.Sprite):
 class Brochetta(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        self.path = os.path.join(CUR_PATH, "boss", "Gur", "gur.png")
+        self.image = pg.image.load(self.path)
+        self.image = pg.transform.scale(self.image, (120,120))
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH
+        self.rect.y = HEIGHT-170
+        self.vel = vec(0,0)
+        self.direction = "up"
+
+    def update(self):
+        if self.direction == "up":
+            if self.rect.y == HEIGHT-250:
+                self.direction = "down"
+            else:
+                self.rect.y -= 1.5
+        elif self.direction == "down":
+            if self.rect.y == HEIGHT - 150:
+                self.direction = "up"
+            else:    
+                self.rect.y += 1.5
+        
+    def death_update(self, vel, obstacleVelocity):
+        self.vel.x = (-1)*obstacleVelocity - vel
+        self.rect.x += self.vel.x
 
 class Chromosomes(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.path = os.path.join(CUR_PATH, "boss", "Sahraoui", "immigration_book.png")
+        self.path = os.path.join(CUR_PATH, "boss", "Brochetta", "chromosomes.png")
         self.image = pg.image.load(self.path)
         self.image = pg.transform.scale(self.image, (70, 100))
+        self.rotNum = random.randint(0,359)
+        self.image = pg.transform.rotate(self.image, self.rotNum)
         self.rect = self.image.get_rect()
         self.rect.x = WIDTH
-        self.rect.y = random.randint(100,150)
+        self.rect.y = HEIGHT - random.randint(120,180)
         self.vel = vec(0,0)
     
     def update(self, vel, obstacleVelocity):
         self.vel.x = obstacleVelocity + vel
         self.rect.x += self.vel.x
 
+class Bacteria(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.path = os.path.join(CUR_PATH, "boss", "Brochetta", "bacteria.png")
+        self.image = pg.image.load(self.path)
+        self.image = pg.transform.scale(self.image, (90, 90))
+        self.rect = self.image.get_rect() 
+        self.rect.x = WIDTH
+        self.rect.y = HEIGHT - random.randint(110,130)
+        self.vel = vec(0,0)
+    
+    def update(self, vel, obstacleVelocity):
+        self.vel.x = obstacleVelocity + vel
+        self.rect.x += self.vel.x
+        self.vel.y += 1 - random.randint(0,2)
+        self.rect.y -= self.vel.y
 
 
 # SAHRAOUI
@@ -1122,6 +1167,39 @@ class Tumble(pg.sprite.Sprite):
 
 
 # BURRI
+class Burri(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.path = os.path.join(CUR_PATH, "boss", "Reymond", "reymond.png")
+        self.image = pg.image.load(self.path)
+        self.image = pg.transform.scale(self.image, (120,120))
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH - 100
+        self.rect.y = HEIGHT - 220
+        self.vel = vec(0,0)
+        self.direction = "down"
+
+    def update(self):
+        if self.direction == "up":
+            if self.rect.y == HEIGHT-450:
+                self.direction = "down"
+            else:
+                self.rect.y -= 1
+        elif self.direction == "down":
+            if self.rect.y == HEIGHT-200:
+                self.direction = "up"
+            else:
+                self.rect.y += 1
+    
+    def death_update(self, vel, obstacleVelocity):
+        self.vel.x = (-1)*obstacleVelocity - vel
+        self.rect.x += self.vel.x
+        
+    def death_update(self, vel, obstacleVelocity):
+        self.vel.x = (-1)*obstacleVelocity - vel
+        self.rect.x += self.vel.x
+
+
 
 
 # SPORT
@@ -1165,4 +1243,3 @@ class Ballon(pg.sprite.Sprite):
         self.rect.y -= self.vel.y
         if self.rect.y > HEIGHT - 100:
             self.vel.y = -1.5*self.vel.y
-

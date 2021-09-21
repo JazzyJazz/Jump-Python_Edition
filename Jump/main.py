@@ -18,7 +18,7 @@ class Main():
         try:    self.image = pg.Surface((int(WIDTH/8), 220))
         except:     self.image = pg.Surface((300, 220))
         self.image.fill(jaune3)
-        self.profs_list = ["Bouchez", "Besson", "Rochat", "Vuille", "Buchmann", "Faggioni", "Andenmatten", "Reymond", "Gratzl", "Sahraoui", "Moix", "Iglesias", "Donzé", "Gur"]
+        self.profs_list = ["Bouchez", "Besson", "Rochat", "Vuille", "Buchmann", "Faggioni", "Andenmatten", "Reymond", "Gratzl", "Sahraoui", "Moix", "Iglesias", "Donzé", "Gur", "Brochetta"]
         self.player_list = ["Adrien B", "Tim", "Mateus", "Loïc", "Jasper", "Malorie", "Alexandre", "Karim", "Oscar", "Piotr", "Adrien M", "Diego", "Simon", "Eva", "Frederike", "Matteo", "Shijie", "Evan"]
         self.playerName = random.choice(self.player_list)
         self.mute = muting
@@ -35,9 +35,13 @@ class Main():
         self.screenRect= self.screenGame.get_rect()
         self.col = (37, 171, 252)
                 
+        self.shijiePlayer = False
         self.playerName = playerName
         if self.playerName == "Shijie":
+            self.shijiePlayer = True
+            self.player = Player(self.playerName)
             self.playerName = random.choice(self.player_list)
+        else:   self.player = Player(self.playerName)
 
         self.kat_active = False
         self.shield_active = False
@@ -114,7 +118,6 @@ class Main():
         self.plane = Plane()
         self.cloud = Cloud()
         self.Moon = Moon()
-        self.player = Player(self.playerName)
 
         self.hitP = False
         
@@ -195,11 +198,7 @@ class Main():
             self.musicBoss = os.path.join(CUR_PATH, "music", "reymond.mp3")
 
         elif name == "Gratzl":
-            self.boss = Gratzl()
-            if self.playerName == "Piotr":
-                self.image = pg.image.load(os.path.join(CUR_PATH, "boss", "Gratzl", "gratzline.png"))
-                self.image = pg.transform.scale(self.image, (120,120))
-
+            self.boss = Gratzl(self.playerName)
             self.nbr = randint(0, 2)
             if self.nbr == 2:
                 self.quintasActive = False
@@ -251,6 +250,12 @@ class Main():
         elif name == "Gur":
             self.boss = Gur()
             self.all_bossSpawnsBallon = pg.sprite.Group()
+            self.musicBoss = os.path.join(CUR_PATH, "music", "besson.mp3")
+        
+        elif name == "Brochetta":
+            self.boss = Brochetta()
+            self.all_bossSpawnsChromosomes = pg.sprite.Group()
+            self.all_bossSpawnsBacteria = pg.sprite.Group()
             self.musicBoss = os.path.join(CUR_PATH, "music", "besson.mp3")
 
 
@@ -522,6 +527,16 @@ class Main():
                 self.ballon.update(self.velAdd, self.obstacleVelocity)
                 if self.ballon.rect.x < -100:
                     self.all_bossSpawnsBallon.remove(self.ballon)
+        
+        elif self.bossName == "Brochetta":
+            for self.chromo in self.all_bossSpawnsChromosomes:
+                self.chromo.update(self.velAdd, self.obstacleVelocity)
+                if self.chromo.rect.x < -100:
+                    self.all_bossSpawnsChromosomes.remove(self.chromo)
+            for self.bact in self.all_bossSpawnsBacteria:
+                self.bact.update(self.velAdd, self.obstacleVelocity)
+                if self.bact.rect.x < -100:
+                    self.all_bossSpawnsBacteria.remove(self.bact)
             
 
         if self.counte == self.spawnBoss + 1000:
@@ -817,6 +832,16 @@ class Main():
                     self.hitP -= random.randint(0,1)
                     if self.hitP == 0:
                         self.killCooldown = 10
+        
+        elif self.bossName == "Brochetta":
+            self.hitsPBossB = pg.sprite.spritecollide(self.player, self.all_bossSpawnsBacteria, False)
+            self.hitsPBossC = pg.sprite.spritecollide(self.player, self.all_bossSpawnsChromosomes, False)
+            if self.hitsPBossB:
+                self.hitP = 1
+            elif self.hitsPBossC:
+                self.hitP = 1
+                if self.playerName == "Jasper":
+                    self.hitP = 4
 
         if self.lifes < 1:
             self.file = open("record.py", "w")
@@ -834,6 +859,11 @@ class Main():
                         self.MinusLife.add(MinusLife(self.player.rect.x -10, self.player.rect.y, 1))
                         self.MinusLife.add(MinusLife(self.player.rect.x -10, self.player.rect.y, 2))
                         self.minusLifeActive = True
+                    else: 
+                        self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 1))
+                        self.MinusLife.add(MinusLife(self.player.rect.x , self.player.rect.y, 2))
+                        self.minusLifeActive = True
+
 
 
 
@@ -882,10 +912,11 @@ class Main():
                     self.player.pos = vec(WIDTH / 2, HEIGHT-50)
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_LCTRL or event.key == pg.K_DOWN:
-                    self.player.image = pg.transform.scale(self.player.image, (60,75))
+                    self.player.image = pg.transform.scale(self.player.image, (80,100))
                     try: 
-                        self.player.image = pg.image.load(os.path.join(CUR_PATH, "players", f"{self.playerName}.png"))
-                        self.player.image = pg.transform.scale(self.player.image, (60,75))
+                        if self.shijiePlayer:   self.player.image = pg.image.load(os.path.join(CUR_PATH, "players", "Shijie.png"))
+                        else:   self.player.image = pg.image.load(os.path.join(CUR_PATH, "players", f"{self.playerName}.png"))
+                        self.player.image = pg.transform.scale(self.player.image, (80,100))
                     except: None
                     self.player.rect = self.player.image.get_rect()
                     self.player.pos = vec(WIDTH / 2, HEIGHT-50)
@@ -1155,6 +1186,25 @@ class Main():
                     self.all_bossSpawnsBallon.add(Ballon())
                     self.spawnNbrBoss += randint(50, 80)
 
+            elif self.bossName == "Brochetta":
+                if self.counte == self.spawnNbrBoss:
+                    self.nbr = randint(1,100)
+                    if self.nbr < 60:
+                        self.all_bossSpawnsChromosomes.add(Chromosomes())
+                        self.boss.image = pg.transform.rotate(self.boss.image, 90)
+                        self.bossRotated = 60
+                        self.spawnNbrBoss += randint(50, 100)
+                    else:
+                        self.all_bossSpawnsBacteria.add(Bacteria())
+                        self.boss.image = pg.transform.rotate(self.boss.image, 90)
+                        self.bossRotated = 30
+                        self.spawnNbrBoss += randint(50, 100)
+
+                if self.bossRotated == 0:
+                    self.boss.image = pg.transform.rotate(self.boss.image, -90)
+                    self.bossRotated = -1
+                elif self.bossRotated > 0:
+                    self.bossRotated -= 1
 
             self.spawnNbr = self.counte + 19
 
@@ -1228,6 +1278,9 @@ class Main():
             self.all_bossSpawnsTumble.draw(self.screenGame)
         elif self.bossName == "Gur":
             self.all_bossSpawnsBallon.draw(self.screenGame)
+        elif self.bossName == "Brochetta":
+            self.all_bossSpawnsChromosomes.draw(self.screenGame)
+            self.all_bossSpawnsBacteria.draw(self.screenGame)
 
         self.screenGame.blit(self.image, (0,100))
 
@@ -1396,6 +1449,7 @@ class Main():
         self.bossList.insert(END, "Iglesias")
         self.bossList.insert(END, "Donzé")
         self.bossList.insert(END, "Gur")
+        self.bossList.insert(END, "Brochetta")
         self.bossList.insert(END, "Profs")
 
 
