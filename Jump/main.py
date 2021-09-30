@@ -19,7 +19,7 @@ class Main():
         except:     self.image = pg.Surface((300, 220))
         self.image.fill(jaune3)
         self.profs_list = ["Bouchez", "Besson", "Rochat", "Vuille", "Buchmann", "Faggioni", "Andenmatten", "Reymond", "Gratzl", "Sahraoui", "Moix", "Iglesias", "Donzé", "Gur", "Brochetta"]
-        self.player_list = ["Adrien B", "Tim", "Mateus", "Loïc", "Jasper", "Malorie", "Alexandre", "Karim", "Oscar", "Piotr", "Adrien M", "Diego", "Simon", "Eva", "Frederike", "Matteo", "Shijie", "Evan"]
+        self.player_list = ["Adrien B", "Tim", "Mateus", "Loïc", "Jasper", "Malorie", "Karim", "Oscar", "Piotr", "Adrien M", "Diego", "Simon", "Eva", "Frederike", "Matteo", "Shijie", "Evan"]
         self.playerName = random.choice(self.player_list)
         self.mute = muting
     
@@ -1416,7 +1416,6 @@ class Main():
         self.playerNameList.insert(END, "Loïc")
         self.playerNameList.insert(END, "Jasper")
         self.playerNameList.insert(END, "Malorie")
-        self.playerNameList.insert(END, "Alexandre")
         self.playerNameList.insert(END, "Karim")
         self.playerNameList.insert(END, "Oscar")
         self.playerNameList.insert(END, "Piotr")
