@@ -1165,12 +1165,11 @@ class Tumble(pg.sprite.Sprite):
         self.rect.x += self.vel.x
 
 
-
 # BURRI
 class Burri(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.path = os.path.join(CUR_PATH, "boss", "Reymond", "reymond.png")
+        self.path = os.path.join(CUR_PATH, "boss", "Burri", "Burri.png")
         self.image = pg.image.load(self.path)
         self.image = pg.transform.scale(self.image, (120,120))
         self.rect = self.image.get_rect()
@@ -1181,12 +1180,12 @@ class Burri(pg.sprite.Sprite):
 
     def update(self):
         if self.direction == "up":
-            if self.rect.y == HEIGHT-450:
+            if self.rect.y == HEIGHT-250:
                 self.direction = "down"
             else:
                 self.rect.y -= 1
         elif self.direction == "down":
-            if self.rect.y == HEIGHT-200:
+            if self.rect.y == HEIGHT-120:
                 self.direction = "up"
             else:
                 self.rect.y += 1
@@ -1199,7 +1198,39 @@ class Burri(pg.sprite.Sprite):
         self.vel.x = (-1)*obstacleVelocity - vel
         self.rect.x += self.vel.x
 
+class Fumer(pg.sprite.Sprite):
+    def __init__(self, bossRectY):
+        super().__init__()
+        self.path = os.path.join(CUR_PATH, "boss", "Burri", "fumee.png")
+        self.image = pg.image.load(self.path)
+        self.image = pg.transform.scale(self.image, (150, 100))
+        self.rect = self.image.get_rect() 
+        self.rect.x = WIDTH-120
+        self.rect.y = bossRectY
+        self.vel = vec(0,0)
+        self.acc = vec(0.1)
+    
+    def update(self, vel, obstacleVelocity):
+        self.vel.x = obstacleVelocity + vel - self.acc.x
+        self.rect.x += self.vel.x
+        self.rect.y -= random.randint(-2,2)
 
+class Antigone(pg.sprite.Sprite):
+    def __init__(self, player):
+        super().__init__()
+        if player == "Simon":   self.path = os.path.join(CUR_PATH, "boss", "Burri", "shrek.png")
+        else:   self.path = os.path.join(CUR_PATH, "boss", "Burri", "antigone.png")
+        self.image = pg.image.load(self.path)
+        self.image = pg.transform.scale(self.image, (60, 90))
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH
+        self.rect.y = HEIGHT-120
+        self.vel = vec(0,0)
+        self.acc = vec(0,2)
+    
+    def update(self, vel, obstacleVelocity):
+        self.vel.x = obstacleVelocity + vel
+        self.rect.x += self.vel.x
 
 
 # SPORT
@@ -1238,7 +1269,7 @@ class Ballon(pg.sprite.Sprite):
     
     def update(self, vel, obstacleVelocity):
         self.vel.x = obstacleVelocity + vel
-        self.vel.y -= 1-self.imageNbr
+        self.vel.y -= (1-self.imageNbr)/3
         self.rect.x += self.vel.x
         self.rect.y -= self.vel.y
         if self.rect.y > HEIGHT - 100:
