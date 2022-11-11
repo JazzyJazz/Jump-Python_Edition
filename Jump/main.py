@@ -267,7 +267,6 @@ class Main():
             self.musicBoss = os.path.join(CUR_PATH, "music", "bouchez.mp3")
 
 
-
     def run(self):
         # Boucle du jeu
         self.playing = True
@@ -942,7 +941,6 @@ class Main():
                     self.killCooldown -= 1
 
 
-
     def event(self):
         # Boucle du jeu - evenement   
         for event in pg.event.get():
@@ -1540,7 +1538,7 @@ class Main():
         self.startScreen.mainloop()
         return(self.obstacleVelocity, self.playerName, self.bossName, self.bossRush)
 
-        
+
 g = Main()
 try:
     show_start_screen_value = g.show_start_screen("Start", record)
