@@ -786,7 +786,7 @@ class PlaqueFemmes(pg.sprite.Sprite):
 class Brochetta(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.path = os.path.join(CUR_PATH, "boss", "Gur", "gur.png")
+        self.path = os.path.join(CUR_PATH, "boss", "Brochetta", "brochetta.png")
         self.image = pg.image.load(self.path)
         self.image = pg.transform.scale(self.image, (120,120))
         self.rect = self.image.get_rect()
