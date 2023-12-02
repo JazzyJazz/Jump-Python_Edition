@@ -8,7 +8,7 @@ acceleration = 0.001
 
 CUR_PATH = os.path.dirname(__file__)
 
-muting = False
+muting = True
 
 grey = (50,50,50)
 jaune1 = (248, 253, 148)

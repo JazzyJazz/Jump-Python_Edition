@@ -76,7 +76,7 @@ class ExtraLife(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = rectX
         self.rect.y = rectY
-        self.vel = vec(0, -0.2)
+        self.vel = vec(0, -1)
         self.col = (255, 0, 0)
         
 
@@ -104,7 +104,7 @@ class MinusLife(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = rectX + (nb-1)*50
         self.rect.y = rectY - 30
-        self.vel = vec(0.2, -0.2)
+        self.vel = vec(1, -1)
         self.col = (255, 0, 0)
         if nb == 1: self.direction = "l"
         if nb == 2:   self.direction = "r"

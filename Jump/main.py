@@ -53,6 +53,8 @@ class Main():
         self.stun = 0
         if self.playerName == "Eva":
             self.lifes += int(0.25*self.lifes)
+        if self.playerName == "Adrien B":
+            self.timeStun = randint(0, 200)
         
         self.mute = muting
 
@@ -293,8 +295,7 @@ class Main():
 
         if self.stun == 0:  
             self.player.update(self.playerName)
-            if self.playerName == "Adrien B":
-                self.n = random.randint(0,330)
+            
         elif self.stun == 1 and self.playerName == "Adrien B":  
             self.all_sprites.remove(self.mac)
             self.stun = 0
@@ -303,7 +304,7 @@ class Main():
             self.player.image = pg.transform.scale(self.player.image, (80,100))
         else:
             self.stun -= 1
-
+            
         if self.player.rect.y < -200:
             self.playing = False
 
@@ -366,13 +367,16 @@ class Main():
                 self.boss.update(self.player.rect.y)
             elif self.bossName == "Moix":
                 self.boss.update(self.player.rect.y)
-            elif self.bossName == "Burri" and self.playerName == "Adrien B" and self.stun == 0 and self.n == 1:
-                self.stun = 50
-                self.all_sprites.add(self.mac)
-                self.path = os.path.join(CUR_PATH, "players", f"Adrien B2.png")
-                self.player.image = pg.image.load(self.path)
-                self.player.image = pg.transform.scale(self.player.image, (80,100))
-
+            elif self.bossName == "Burri" and self.playerName == "Adrien B":
+                self.timeStun -= 1
+                if self.timeStun == 1:
+                    self.timeStun += randint(200, 330)
+                    if randint(0, 2) == 0:
+                        self.stun = 150
+                        self.all_sprites.add(self.mac)
+                        self.path = os.path.join(CUR_PATH, "players", f"Adrien B2.png")
+                        self.player.image = pg.image.load(self.path)
+                        self.player.image = pg.transform.scale(self.player.image, (80,100))
             
             else:
                 self.boss.update()
@@ -436,7 +440,7 @@ class Main():
                             self.lifes += 1
                     else:
                         if self.keyToPress.death:
-                                self.playing = False
+                            self.playing = False
                         self.all_bossSpawnsKeyToPress.remove(self.keyToPress)
                         self.spawnNbrBoss += randint(201, 250)
                 if self.counte == self.spawnNbrBoss + 180 and self.playerName == "Piotr":
@@ -1437,8 +1441,8 @@ class Main():
 
         self.titleFrame = Frame(self.startScreen, bg=jaune1HEX)
         self.titleFrame.pack()
-        self.title = Label(self.titleFrame, text="Jump!", bg=jaune1HEX)
-        self.title.config(font=("Consola", 60))
+        self.title = Label(self.titleFrame, text="Jump!", bg=jaune1HEX, fg="black")
+        self.title.config(font=("Consola", 60, ))
         self.title.pack()
 
 
@@ -1448,13 +1452,13 @@ class Main():
         self.recoreFrame.pack()
 
         if start_or_restart == "Restart":
-            self.scoreLabel = Label(self.recoreFrame, text = "Score : " + str(self.score), bg=jaune1HEX)
+            self.scoreLabel = Label(self.recoreFrame, text = "Score : " + str(self.score), bg=jaune1HEX, fg="black")
             self.scoreLabel.config(font=("Consola", 20))
             self.scoreLabel.pack()
         else:
             pass
         
-        self.recoreLabel = Label(self.recoreFrame, text = "Best Score : " + str(xrecord), bg=jaune1HEX)
+        self.recoreLabel = Label(self.recoreFrame, text = "Best Score : " + str(xrecord), bg=jaune1HEX, fg="black")
         self.recoreLabel.config(font=("Consola", 20))
         self.recoreLabel.pack()
 
@@ -1467,9 +1471,9 @@ class Main():
 
         self.difficultyListFrame = Frame(self.listFrame, padx = 1, bg=jaune1HEX)
         self.difficultyListFrame.pack(side=LEFT)
-        self.difficultyListTitle = Label(self.difficultyListFrame, text = "Difficulté", bg=jaune1HEX)
+        self.difficultyListTitle = Label(self.difficultyListFrame, text = "Difficulté", bg=jaune1HEX, fg="black")
         self.difficultyListTitle.pack(side= TOP)
-        self.difficultyList = Listbox(self.difficultyListFrame, height= 6, bg=jaune2HEX, exportselection=0)
+        self.difficultyList = Listbox(self.difficultyListFrame, height= 6, bg=jaune2HEX, exportselection=0, fg="black")
         self.difficultyList.pack()
         self.difficultyList.insert(END, "Facile")
         self.difficultyList.insert(END, "Moyen")
@@ -1479,9 +1483,9 @@ class Main():
 
         self.playerNameListFrame = Frame(self.listFrame, padx = 1, bg=jaune1HEX)
         self.playerNameListFrame.pack(side=LEFT)
-        self.playerNameListTitle = Label(self.playerNameListFrame, text = "Nom du joueur", bg=jaune1HEX)
+        self.playerNameListTitle = Label(self.playerNameListFrame, text = "Nom du joueur", bg=jaune1HEX, fg="black")
         self.playerNameListTitle.pack(side = TOP)
-        self.playerNameList = Listbox(self.playerNameListFrame, height= 6, bg=jaune2HEX, exportselection=0)
+        self.playerNameList = Listbox(self.playerNameListFrame, height= 6, bg=jaune2HEX, exportselection=0, fg="black")
         self.playerNameList.pack()
         self.playerNameList.insert(END, "Adrien B")
         self.playerNameList.insert(END, "Tim")
@@ -1503,9 +1507,9 @@ class Main():
 
         self.bossFrame = Frame(self.listFrame, padx = 1, bg=jaune1HEX)
         self.bossFrame.pack(side=RIGHT)
-        self.bossTitle = Label(self.bossFrame, text = "Présence du boss : ", bg=jaune1HEX)
+        self.bossTitle = Label(self.bossFrame, text = "Présence du boss : ", bg=jaune1HEX, fg="black")
         self.bossTitle.pack(side= TOP)
-        self.bossList = Listbox(self.bossFrame, height= 6, bg=jaune2HEX, exportselection=0)
+        self.bossList = Listbox(self.bossFrame, height= 6, bg=jaune2HEX, exportselection=0, fg="black")
         self.bossList.pack()
         self.bossList.insert(END, "Besson")
         self.bossList.insert(END, "Bouchez")
@@ -1528,7 +1532,7 @@ class Main():
 
         self.startButtonFrame = Frame(self.startScreen, pady=10, bg=jaune1HEX)
         self.startButtonFrame.pack()
-        self.startButton = Button(self.startButtonFrame, text=start_or_restart, width= 15, height = 2, bg= jaune2HEX, command=startGame)
+        self.startButton = Button(self.startButtonFrame, text=start_or_restart, width= 15, height = 2, bg= jaune2HEX, command=startGame, fg="black")
         self.startButton.config(font=("Consola", 20))
         self.startButton.pack()
         
